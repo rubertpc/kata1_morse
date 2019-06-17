@@ -1,5 +1,4 @@
-#                   1         2
-#         0123456789012345678901234567890
+
 letras = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ.,?"!'
 morse = {
     'A':'·—', 
