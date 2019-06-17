@@ -45,11 +45,16 @@ morse = {
     '!': '——··——'
 }
 
-cadena = "Hola, mundo".upper()
+def toMorse(texto):
+    texto = texto.upper()
+    resultado = ""
+    for letra in texto:
+        if letra in morse:
+            resultado += morse[letra] 
+            resultado += " "      
+        else:
+            resultado += " "
 
-for letra in cadena:
-    if letra in morse:
-        print("{}: {}".format(letra, morse[letra]))       
-    else:
-        print(" ")
+    return resultado
+            
         
