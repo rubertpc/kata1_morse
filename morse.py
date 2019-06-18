@@ -63,7 +63,13 @@ def toMorse(texto):
     return resultado
 
 def toPlain(codigo):
-    pass
+    codigo = codigo.split(' ')
+    letras = ''
+    for caracter in codigo:
+        if caracter in reverso:            
+            letras += reverso[caracter]            
+        else:
+            letras += " "            
 
-            
+    return letras      
         
