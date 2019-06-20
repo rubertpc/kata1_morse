@@ -161,6 +161,6 @@ def telegram(remitente, destinatario, mensaje):
 
     document.add_page_break()
 
-    document.save('{}{}.docx'.format(destinatario, strftime( "%Y%m%d%H%M%S%z", fechahora)))
+    document.save('envios/{}{}.docx'.format(destinatario, strftime( "%Y%m%d%H%M%S%z", fechahora)))
 
         
