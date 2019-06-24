@@ -1,6 +1,7 @@
 import morse
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 
 class Translator(ttk.Frame):
     def __init__(self, parent, **kwargs):
@@ -26,6 +27,7 @@ class Translator(ttk.Frame):
         self.origin_text = Text(self, width=26, height=8)
         self.origin_text.place(x=32, y=60)
 
+        self.origin_text.bind("<KeyRelease>", self.traduce)
 
         self.destino_lbl = ttk.Label(self, text="Morse") #a diferencia de origin se puede escribir así también
         self.destino_lbl.place(x=250, y=40)
@@ -39,23 +41,73 @@ class Translator(ttk.Frame):
         #btn_change.place(y=38, x=153)
         btn_change.place(y=140, x=500)
 
-        btn_traduce = ttk.Button(self, command=self.traduce, text="Traduce")
-        btn_traduce.place(y=115, x=500)
+        #btn_traduce = ttk.Button(self, command=self.traduce, text="Traduce")
+        #btn_traduce.place(y=115, x=500)
 
-    def traduce(self):
-        texto_original = self.origin_text.get(0) #NO está funcionando
+    #def modificaOrigin(self):
+    #    self.traduce()
+
+    def traduce(self, e=None):
+        print('*{}*'.format(e))
+        texto_original = self.origin_text.get("1.0", "end-1c")
         if self.traduccionDirecta:
             traduccion = morse.toMorse(texto_original)
         else:
             traduccion = morse.toPlain(texto_original)
-        print(traduccion)
-
+        self.destino_text.delete("1.0", END)
+        self.destino_text.insert(INSERT, traduccion)
+        #print(traduccion)
 
 
     def send_telegram(self):
-        print("Enviar telegrama")
+
+        sender = self.sender.get()
+        receiver = self.receiver.get()
+        if self.traduccionDirecta:
+            msg = self.origin_text.get("1.0", "end-1c")
+        else:
+            msg = self.destino_text.get("1.0", "end-1c")
+
+        if sender.strip() == "":
+            messagebox.showwarning("Aviso", "Debe informar el sender", parent=self)
+            return
+
+        if receiver.strip() == "":
+            messagebox.showwarning("Aviso", "Debe informar el receiver", parent=self)
+            return
+
+        if msg.strip() == "":
+            messagebox.showwarning(
+                "Aviso", "Debe informar el mensaje", icon=messagebox.WARNING)
+            return
+
+
+
+
+
+
+
+        #print("Enviar telegrama")
+        #if self.sender.get() == "":
+        #    print("Debe rellenar el sender") #sustituir por ventana de warning
+        #    messagebox.showwarning("Aviso", "Debe informar el sender", parent=self)
+        #    return
+        
+        #if self.receiver.get() == "":
+        #    print("Debe informar el receiver") #sustituir por ventana de warning
+        #    messagebox.showwarning(
+        #        "Aviso", "Debe informar el receiver", icon=messagebox.WARNING)
+        #    return
+
+
+        if self.traduccionDirecta:
+            morse.telegram(self.sender.get(), self.receiver.get(), self.origin_text.get("1.0", "end-1c"))
+        else:
+            morse.telegram(self.sender.get(), self.receiver.get(), self.destino_text.get("1.0", "end-1c"))
 
     def changeText(self):
+        self.origin_text.delete("1.0", END)
+        self.destino_text.delete("1.0", END)
         if self.traduccionDirecta:
             self.origin_lbl.config(text='Morse')
             self.destino_lbl.config(text= 'Plano')
